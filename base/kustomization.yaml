@@ -16,3 +16,4 @@ resources:
   - node-worker/deployment.yaml
   # pptx-agent removed — Claude Code agent runs locally, not in K8s
   - ingress.yaml
+  - seed-job.yaml

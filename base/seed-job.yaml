@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-seed
+  namespace: preso
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed
+          image: node:20-alpine
+          envFrom:
+            - secretRef:
+                name: preso-secrets
+            - configMapRef:
+                name: preso-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache git openssl
+              cd /tmp
+              git clone --depth 1 https://github.com/akshay-eng/PresoAI.git app
+              cd app/packages/db
+              npm install --no-audit --no-fund prisma@5.22.0 @prisma/client@5.22.0 bcryptjs@2.4.3 tsx@4.19.0 @types/bcryptjs
+              npx prisma generate
+              npx tsx prisma/seed.ts
+              echo "Seed complete"

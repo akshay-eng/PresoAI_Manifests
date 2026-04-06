@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-worker
+  namespace: preso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-worker
+  template:
+    metadata:
+      labels:
+        app: node-worker
+    spec:
+      containers:
+        - name: node-worker
+          image: ak3hay/preso-node-worker:latest
+          envFrom:
+            - secretRef:
+                name: preso-secrets
+            - configMapRef:
+                name: preso-config
+          env:
+            - name: NODE_WORKER_CONCURRENCY
+              value: "5"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi

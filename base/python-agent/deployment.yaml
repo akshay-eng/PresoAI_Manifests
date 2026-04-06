@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-agent
+  namespace: preso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-agent
+  template:
+    metadata:
+      labels:
+        app: python-agent
+    spec:
+      containers:
+        - name: python-agent
+          image: ak3hay/preso-python-agent:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: preso-secrets
+            - configMapRef:
+                name: preso-config
+          env:
+            - name: PYTHON_WORKER_CONCURRENCY
+              value: "4"
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-agent
+  namespace: preso
+spec:
+  selector:
+    app: python-agent
+  ports:
+    - port: 8000
+      targetPort: 8000

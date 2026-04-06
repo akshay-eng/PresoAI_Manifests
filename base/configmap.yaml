@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: preso-config
+  namespace: preso
+data:
+  DATABASE_URL: "postgresql://preso:preso@postgres:5432/preso"
+  REDIS_URL: "redis://redis:6379"
+  S3_ENDPOINT_URL: "http://minio:9000"
+  S3_BUCKET_NAME: "preso"
+  AWS_REGION: "us-east-1"
+  NEXTAUTH_URL: "https://preso.ai"
+  PYTHON_AGENT_URL: "http://python-agent:8000"
+  PPTX_AGENT_URL: "http://pptx-agent:8100"
+  COLLABORA_URL: "http://collabora:9980"
+  MINIO_ENDPOINT: "http://minio:9000"

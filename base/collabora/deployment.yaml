@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collabora
+  namespace: preso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: collabora
+  template:
+    metadata:
+      labels:
+        app: collabora
+    spec:
+      containers:
+        - name: collabora
+          image: collabora/code
+          ports:
+            - containerPort: 9980
+          env:
+            - name: extra_params
+              value: "--o:ssl.enable=false --o:net.post_allow.host[0]=.* --o:net.proto=IPv4"
+            - name: aliasgroup1
+              value: "http://web:3000"
+            - name: server_name
+              value: "collabora"
+            - name: DONT_GEN_SSL_CERT
+              value: "1"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: collabora
+  namespace: preso
+spec:
+  selector:
+    app: collabora
+  ports:
+    - port: 9980
+      targetPort: 9980

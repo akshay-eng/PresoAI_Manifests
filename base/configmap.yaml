@@ -4,12 +4,13 @@ metadata:
   name: preso-config
   namespace: preso
 data:
-  DATABASE_URL: "postgresql://preso:preso@postgres:5432/preso"
+  DATABASE_URL: "postgresql://preso:Pr3s0Ai_db_2026@postgres:5432/preso"
   REDIS_URL: "redis://redis:6379"
   S3_ENDPOINT_URL: "http://minio:9000"
   S3_BUCKET_NAME: "preso"
   AWS_REGION: "us-east-1"
-  NEXTAUTH_URL: "https://preso.ai"
+  NEXTAUTH_URL: "http://192.168.1.5:30030"
+  AUTH_TRUST_HOST: "true"
   PYTHON_AGENT_URL: "http://python-agent:8000"
   PPTX_AGENT_URL: "http://pptx-agent:8100"
   COLLABORA_URL: "http://collabora:9980"

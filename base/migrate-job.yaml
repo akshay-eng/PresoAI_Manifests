@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: prisma-migrate
+  namespace: preso
+spec:
+  ttlSecondsAfterFinished: 300
+  backoffLimit: 3
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migrate
+          image: node:20-alpine
+          envFrom:
+            - secretRef:
+                name: preso-secrets
+            - configMapRef:
+                name: preso-config
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              apk add --no-cache git openssl
+              cd /tmp
+              git clone --depth 1 https://github.com/akshay-eng/PresoAI.git app
+              cd app/packages/db
+              npm install --no-audit --no-fund prisma@5.22.0 @prisma/client@5.22.0
+              npx prisma db push --skip-generate --accept-data-loss
+              echo "Migration complete"

@@ -38,11 +38,11 @@ spec:
               mountPath: /data
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 100m
+              memory: 512Mi
             limits:
-              cpu: 50m
-              memory: 64Mi
+              cpu: 500m
+              memory: 1Gi
       volumes:
         - name: minio-data
           persistentVolumeClaim:

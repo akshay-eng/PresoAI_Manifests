@@ -22,18 +22,18 @@ spec:
             - name: extra_params
               value: "--o:ssl.enable=false --o:net.post_allow.host[0]=.* --o:net.proto=IPv4"
             - name: aliasgroup1
-              value: "http://web:3000"
+              value: "http://192.168.1.5:30030"
             - name: server_name
-              value: "collabora"
+              value: "192.168.1.5:30098"
             - name: DONT_GEN_SSL_CERT
               value: "1"
           resources:
             requests:
-              cpu: 50m
-              memory: 64Mi
-            limits:
-              cpu: "500m"
+              cpu: 100m
               memory: 512Mi
+            limits:
+              cpu: "1000m"
+              memory: 1Gi
 ---
 apiVersion: v1
 kind: Service

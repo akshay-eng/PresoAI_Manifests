@@ -14,4 +14,7 @@ data:
   PYTHON_AGENT_URL: "http://python-agent:8000"
   PPTX_AGENT_URL: "http://pptx-agent:8100"
   COLLABORA_URL: "http://collabora:9980"
+  COLLABORA_PUBLIC_URL: "http://192.168.1.5:30098"
+  WOPI_PUBLIC_URL: "http://192.168.1.5:30030"
+  S3_PUBLIC_ENDPOINT: "http://192.168.1.5:30090"
   MINIO_ENDPOINT: "http://minio:9000"

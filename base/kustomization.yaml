@@ -5,7 +5,7 @@ namespace: preso
 
 resources:
   - namespace/namespace.yaml
-  - secrets.yaml
+  # secrets.yaml — managed manually with kubectl, not ArgoCD
   - configmap.yaml
   - postgres/deployment.yaml
   - redis/deployment.yaml

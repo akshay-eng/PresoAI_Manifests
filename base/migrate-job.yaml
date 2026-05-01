@@ -3,8 +3,13 @@ kind: Job
 metadata:
   name: prisma-migrate
   namespace: preso
+  annotations:
+    # Run before every ArgoCD sync, deleting the previous Job first so
+    # migrations re-run idempotently on each deploy.
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
-  ttlSecondsAfterFinished: 300
+  ttlSecondsAfterFinished: 600
   backoffLimit: 3
   template:
     spec:
@@ -29,10 +34,26 @@ spec:
             - -c
             - |
               set -e
-              apk add --no-cache git openssl
+              apk add --no-cache git openssl postgresql-client
               cd /tmp
               git clone --depth 1 https://github.com/akshay-eng/PresoAI.git app
               cd app/packages/db
               npm install --no-audit --no-fund prisma@5.22.0 @prisma/client@5.22.0
-              npx prisma db push --skip-generate --accept-data-loss
+
+              # If the DB was originally bootstrapped with `prisma db push`
+              # (i.e. tables exist but _prisma_migrations is empty), mark
+              # the init migration as applied so `migrate deploy` doesn't
+              # try to recreate existing tables.
+              HAS_USERS=$(psql "$DATABASE_URL" -tAc \
+                "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='users';")
+              HAS_PMT=$(psql "$DATABASE_URL" -tAc \
+                "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='_prisma_migrations';")
+
+              if [ "$HAS_USERS" = "1" ] && [ -z "$HAS_PMT" ]; then
+                echo "Legacy db-push DB detected; marking 20260405065513_init as applied"
+                npx prisma migrate resolve --applied 20260405065513_init
+              fi
+
+              echo "Running migrations..."
+              npx prisma migrate deploy
               echo "Migration complete"

@@ -4,10 +4,13 @@ metadata:
   name: prisma-migrate
   namespace: preso
   annotations:
-    # Run before every ArgoCD sync, deleting the previous Job first so
-    # migrations re-run idempotently on each deploy.
-    argocd.argoproj.io/hook: PreSync
+    # Run during sync at wave 5 — AFTER postgres (wave 0) has rolled with
+    # the pgvector image, so `CREATE EXTENSION vector` actually works.
+    # BeforeHookCreation deletes the previous Job so it runs idempotently
+    # on every sync.
+    argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "5"
 spec:
   ttlSecondsAfterFinished: 600
   backoffLimit: 3
@@ -40,10 +43,8 @@ spec:
               cd app/packages/db
               npm install --no-audit --no-fund prisma@5.22.0 @prisma/client@5.22.0
 
-              # If the DB was originally bootstrapped with `prisma db push`
-              # (i.e. tables exist but _prisma_migrations is empty), mark
-              # the init migration as applied so `migrate deploy` doesn't
-              # try to recreate existing tables.
+              # Bootstrap: legacy db-push DBs have tables but no _prisma_migrations.
+              # Mark init as applied so `migrate deploy` doesn't try to recreate.
               HAS_USERS=$(psql "$DATABASE_URL" -tAc \
                 "SELECT 1 FROM information_schema.tables WHERE table_schema='public' AND table_name='users';")
               HAS_PMT=$(psql "$DATABASE_URL" -tAc \
@@ -52,6 +53,18 @@ spec:
               if [ "$HAS_USERS" = "1" ] && [ -z "$HAS_PMT" ]; then
                 echo "Legacy db-push DB detected; marking 20260405065513_init as applied"
                 npx prisma migrate resolve --applied 20260405065513_init
+              fi
+
+              # Self-recovery: if a previous run left a migration in the
+              # failed state, mark it rolled back so we can retry. Safe because
+              # our migrations are CREATE-only (no destructive partial state).
+              FAILED=$(psql "$DATABASE_URL" -tAc \
+                "SELECT migration_name FROM _prisma_migrations
+                 WHERE finished_at IS NULL AND rolled_back_at IS NULL
+                 LIMIT 1;" 2>/dev/null | tr -d '[:space:]')
+              if [ -n "$FAILED" ]; then
+                echo "Found failed migration $FAILED; marking as rolled back to retry"
+                npx prisma migrate resolve --rolled-back "$FAILED"
               fi
 
               echo "Running migrations..."

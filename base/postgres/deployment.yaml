@@ -3,6 +3,10 @@ kind: Deployment
 metadata:
   name: postgres
   namespace: preso
+  annotations:
+    # Sync first so the new pgvector image is running before the
+    # prisma-migrate Job (wave 5) tries to create the extension.
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: 1
   selector:

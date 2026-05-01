@@ -33,6 +33,11 @@ spec:
                 secretKeyRef:
                   name: preso-secrets
                   key: MINIO_ROOT_PASSWORD
+            # CORS: allow browser PUT (presigned upload) + GET from the web
+            # app origin. Without this, browsers block presigned uploads
+            # to https://minio.stallion-ai.in with no Access-Control header.
+            - name: MINIO_API_CORS_ALLOW_ORIGIN
+              value: "http://stallion-aii.redirectme.net:30030"
           volumeMounts:
             - name: minio-data
               mountPath: /data

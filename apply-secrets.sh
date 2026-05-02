@@ -16,6 +16,9 @@ kubectl create secret generic preso-secrets -n preso \
   --from-literal=OPENAI_API_KEY="" \
   --from-literal=MISTRAL_API_KEY="" \
   --from-literal=TAVILY_API_KEY="YOUR_TAVILY_KEY" \
+  --from-literal=ADMIN_USERNAME="admin" \
+  --from-literal=ADMIN_PASSWORD="YOUR_ADMIN_PASSWORD" \
+  --from-literal=ADMIN_COOKIE_SECRET="YOUR_32_CHAR_RANDOM_SECRET" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Secrets applied!"

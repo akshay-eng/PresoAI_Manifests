@@ -6,10 +6,10 @@ bases:
 
 images:
   - name: ak3hay/preso-web
-    newTag: "9b2b4ad5"
+    newTag: "f7fd3ad3"
   - name: ak3hay/preso-python-agent
-    newTag: "9b2b4ad5"
+    newTag: "f7fd3ad3"
   - name: ak3hay/preso-node-worker
-    newTag: "9b2b4ad5"
+    newTag: "f7fd3ad3"
   - name: ak3hay/preso-pptx-agent
-    newTag: "9b2b4ad5"
+    newTag: "f7fd3ad3"

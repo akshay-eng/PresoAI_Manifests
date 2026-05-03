@@ -37,7 +37,7 @@ spec:
             # app origin. Without this, browsers block presigned uploads
             # to https://minio.stallion-ai.in with no Access-Control header.
             - name: MINIO_API_CORS_ALLOW_ORIGIN
-              value: "http://stallion-aii.redirectme.net:30030"
+              value: "https://presoai.stallion-ai.in"
           volumeMounts:
             - name: minio-data
               mountPath: /data

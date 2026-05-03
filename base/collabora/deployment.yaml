@@ -22,7 +22,7 @@ spec:
             - name: extra_params
               value: "--o:ssl.enable=false --o:net.post_allow.host[0]=.* --o:net.proto=IPv4"
             - name: aliasgroup1
-              value: "http://stallion-aii.redirectme.net:30030"
+              value: "https://presoai.stallion-ai.in"
             - name: server_name
               value: "collabora.stallion-ai.in"
             - name: DONT_GEN_SSL_CERT

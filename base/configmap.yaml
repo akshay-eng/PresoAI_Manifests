@@ -14,7 +14,7 @@ data:
   PYTHON_AGENT_URL: "http://python-agent:8000"
   PPTX_AGENT_URL: "http://pptx-agent:8100"
   COLLABORA_URL: "http://collabora:9980"
-  COLLABORA_PUBLIC_URL: "http://collabora.stallion-ai.in"
+  COLLABORA_PUBLIC_URL: "https://collabora.stallion-ai.in"
   WOPI_PUBLIC_URL: "https://presoai.stallion-ai.in"
   S3_PUBLIC_ENDPOINT: "https://minio.stallion-ai.in"
   MINIO_ENDPOINT: "http://minio:9000"

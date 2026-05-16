@@ -6,13 +6,13 @@ bases:
 
 images:
   - name: ak3hay/preso-web
-    newTag: "f9bbac78"
+    newTag: "230e9867"
   - name: ak3hay/preso-python-agent
-    newTag: "f9bbac78"
+    newTag: "230e9867"
   - name: ak3hay/preso-node-worker
-    newTag: "f9bbac78"
+    newTag: "230e9867"
   - name: ak3hay/preso-pptx-agent
-    newTag: "f9bbac78"
+    newTag: "230e9867"
 
 patchesStrategicMerge:
   - replicas-patch.yaml

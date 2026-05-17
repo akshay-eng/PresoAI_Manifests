@@ -18,5 +18,4 @@ resources:
   - mcp-server/ingress.yaml
   # pptx-agent removed — Claude Code agent runs locally, not in K8s
   - ingress.yaml
-  - seed-job.yaml
   - migrate-job.yaml

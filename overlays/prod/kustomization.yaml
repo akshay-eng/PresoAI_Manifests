@@ -6,12 +6,12 @@ bases:
 
 images:
   - name: ak3hay/preso-web
-    newTag: "2897c4b5"
+    newTag: "67a69025"
   - name: ak3hay/preso-python-agent
-    newTag: "2897c4b5"
+    newTag: "67a69025"
   - name: ak3hay/preso-node-worker
-    newTag: "2897c4b5"
+    newTag: "67a69025"
   - name: ak3hay/preso-mcp-server
-    newTag: "2897c4b5"
+    newTag: "67a69025"
   - name: ak3hay/preso-pptx-agent
-    newTag: "2897c4b5"
+    newTag: "67a69025"

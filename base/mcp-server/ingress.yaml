@@ -15,9 +15,20 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+        - presoai.stallion-ai.in
         - preso.ai
       secretName: preso-tls
   rules:
+    - host: presoai.stallion-ai.in
+      http:
+        paths:
+          - path: /mcp
+            pathType: Prefix
+            backend:
+              service:
+                name: mcp-server
+                port:
+                  number: 8200
     - host: preso.ai
       http:
         paths:

@@ -11,5 +11,7 @@ images:
     newTag: "75be3453"
   - name: ak3hay/preso-node-worker
     newTag: "75be3453"
+  - name: ak3hay/preso-mcp-server
+    newTag: "75be3453"
   - name: ak3hay/preso-pptx-agent
     newTag: "75be3453"

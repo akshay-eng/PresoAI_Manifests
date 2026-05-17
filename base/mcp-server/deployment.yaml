@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-server
+  namespace: preso
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-server
+  template:
+    metadata:
+      labels:
+        app: mcp-server
+    spec:
+      containers:
+        - name: mcp-server
+          image: ak3hay/preso-mcp-server:latest
+          ports:
+            - containerPort: 8200
+          env:
+            - name: MCP_PORT
+              value: "8200"
+            - name: MCP_HOST
+              value: "0.0.0.0"
+            - name: MCP_ENDPOINT
+              value: "/mcp"
+            - name: PRESO_API_BASE_URL
+              value: "http://web:3000"
+          envFrom:
+            - secretRef:
+                name: preso-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8200
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8200
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: "500m"
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mcp-server
+  namespace: preso
+spec:
+  selector:
+    app: mcp-server
+  ports:
+    - port: 8200
+      targetPort: 8200

@@ -4,15 +4,14 @@ metadata:
   name: prisma-seed
   namespace: preso
   annotations:
-    # Run AFTER prisma-migrate (wave 5) so the seed script sees the latest
-    # schema. Otherwise seed.ts crashes when the code references columns
-    # the DB hasn't migrated to yet (chicken-and-egg).
-    argocd.argoproj.io/hook: Sync
+    # PostSync so deployments roll out FIRST, then seed runs.
+    # Previously Sync-wave-10 blocked web pod updates until git clone + npm install finished.
+    argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
-    argocd.argoproj.io/sync-wave: "10"
 spec:
-  ttlSecondsAfterFinished: 300
-  backoffLimit: 3
+  ttlSecondsAfterFinished: 120
+  activeDeadlineSeconds: 600
+  backoffLimit: 1
   template:
     spec:
       restartPolicy: OnFailure

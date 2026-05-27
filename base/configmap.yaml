@@ -18,3 +18,6 @@ data:
   WOPI_PUBLIC_URL: "https://presoai.stallion-ai.in"
   S3_PUBLIC_ENDPOINT: "https://minio.stallion-ai.in"
   MINIO_ENDPOINT: "http://minio:9000"
+  # Video agent — service not yet deployed (feature is Coming Soon).
+  # Routes default to this URL; will 503 gracefully if called while feature is hidden.
+  VIDEO_AGENT_URL: "http://video-agent:3100"
